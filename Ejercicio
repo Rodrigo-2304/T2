@@ -1,0 +1,47 @@
+import random
+
+def generar_palabra():
+    return ''.join(chr(random.randint(97, 122)) for _ in range(4))  
+
+def generar_matriz(n):
+    return [[generar_palabra() for _ in range(n)] for _ in range(n)]
+
+def tiene_vocal(palabra):
+    for letra in palabra:
+        if letra in 'aeiou':
+            return True
+    return False
+
+def contar_palabras_con_vocal(matriz):
+    n = len(matriz)
+
+    if n == 1:
+        return 1 if tiene_vocal(matriz[0][0]) else 0
+
+    mitad = n // 2
+
+    A = [fila[:mitad] for fila in matriz[:mitad]]
+    B = [fila[mitad:] for fila in matriz[:mitad]]
+    C = [fila[:mitad] for fila in matriz[mitad:]]
+    D = [fila[mitad:] for fila in matriz[mitad:]]
+
+    return (contar_palabras_con_vocal(A) +
+            contar_palabras_con_vocal(B) +
+            contar_palabras_con_vocal(C) +
+            contar_palabras_con_vocal(D))
+
+if __name__ == "__main__":
+    n = int(input("Ingrese el tamaño de la matriz cuadrada: "))
+
+    if n & (n - 1) != 0:
+        print("Por favor, ingrese un tamaño que sea potencia de 2 (por ejemplo 2, 4, 8...).")
+    else:
+        matriz = generar_matriz(n)
+
+        print("\nMATRIZ GENERADA:\n")
+        for fila in matriz:
+            print(' '.join(fila))
+
+        total_vocales = contar_palabras_con_vocal(matriz)
+
+        print(f"\nTotal de palabras con al menos una vocal: {total_vocales}")
